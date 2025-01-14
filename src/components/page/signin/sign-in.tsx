@@ -2,8 +2,6 @@
 
 import React from "react";
 
-type Props = {};
-
-export default function Signin({}: Props) {
+export default function Signin() {
   return <div></div>;
 }
