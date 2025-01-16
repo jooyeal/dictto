@@ -11,6 +11,11 @@ const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
     }),
   ],
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      return `${baseUrl}/dashboard`;
+    },
+  },
 } satisfies NextAuthOptions;
 
 const handler = NextAuth(authOptions);
