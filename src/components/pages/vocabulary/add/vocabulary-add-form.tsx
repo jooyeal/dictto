@@ -41,7 +41,7 @@ export function VocabularyAddForm({ userId }: Props) {
       .then(() => {
         toast({ title: "Added vocabularies successfully" });
       })
-      .catch((e) => {
+      .catch(() => {
         toast({ title: "Failed to add", variant: "destructive" });
       });
   };

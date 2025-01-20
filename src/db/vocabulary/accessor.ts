@@ -10,7 +10,10 @@ export async function getRandomVocabularies() {
       skip,
     });
     return vocabularies;
-  } catch {}
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
 export async function createVocabularies(data: TCreateVocabularies) {
@@ -18,7 +21,7 @@ export async function createVocabularies(data: TCreateVocabularies) {
     await prisma.vocabulary.createMany({
       data,
     });
-  } catch (e: any) {
+  } catch (e) {
     console.error(e);
     throw e;
   }

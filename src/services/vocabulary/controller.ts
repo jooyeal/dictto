@@ -14,7 +14,10 @@ export async function fetchRandomVocabularies() {
   try {
     const vocabularies = await getRandomVocabularies();
     return vocabularies;
-  } catch {}
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
 }
 
 export async function addVocabularies(data: TAddVocabularies) {
@@ -68,7 +71,7 @@ export async function addVocabularies(data: TAddVocabularies) {
 
     // excute db manipulation
     await createVocabularies(vocabulariesDataWithUserId);
-  } catch (e: any) {
+  } catch (e) {
     console.error(e);
     throw e;
   }
