@@ -1,6 +1,6 @@
-import Dashboard from "@/components/pages/dashboard/dashboard";
+import { Dashboard } from "@/components/pages/dashboard";
 import React from "react";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
   return <Dashboard />;
 }

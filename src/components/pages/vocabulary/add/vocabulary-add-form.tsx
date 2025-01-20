@@ -1,0 +1,67 @@
+"use client";
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { addVocabularies } from "@/services/vocabulary/controller";
+
+type Props = {
+  userId?: string;
+};
+
+const formSchema = z.object({
+  vocabularies: z.string().min(1, { message: "Please enter vocabulry" }),
+});
+
+export function VocabularyAddForm({ userId }: Props) {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      vocabularies: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    if (!userId) return;
+    const vocabularies = values.vocabularies.split(",");
+    addVocabularies({ userId, vocabularies }).then().catch();
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="vocabularies"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Add vocabularies</FormLabel>
+              <FormControl>
+                <Textarea className="resize-none" rows={3} {...field} />
+              </FormControl>
+              <FormDescription>
+                If you want to add multiple vocabularies, separate them with a
+                comma (,). For example: apple, banana
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button className="w-full" type="submit" size="sm">
+          Submit
+        </Button>
+      </form>
+    </Form>
+  );
+}
