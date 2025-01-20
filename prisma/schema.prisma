@@ -73,6 +73,7 @@ model Vocabulary {
   content    String  @unique
   meaning    String
   isPassed   Boolean @default(false)
+  examples   String[]
   userId     String
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

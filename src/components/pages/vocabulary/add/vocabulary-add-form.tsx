@@ -15,6 +15,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { addVocabularies } from "@/services/vocabulary/controller";
+import { useToast } from "@/hooks/use-toast";
 
 type Props = {
   userId?: string;
@@ -25,6 +26,8 @@ const formSchema = z.object({
 });
 
 export function VocabularyAddForm({ userId }: Props) {
+  const { toast } = useToast();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,10 +35,15 @@ export function VocabularyAddForm({ userId }: Props) {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
+  const onSubmit = ({ vocabularies }: z.infer<typeof formSchema>) => {
     if (!userId) return;
-    const vocabularies = values.vocabularies.split(",");
-    addVocabularies({ userId, vocabularies }).then().catch();
+    return addVocabularies({ userId, vocabularies })
+      .then(() => {
+        toast({ title: "Added vocabularies successfully" });
+      })
+      .catch((e) => {
+        toast({ title: "Failed to add", variant: "destructive" });
+      });
   };
 
   return (
@@ -58,7 +66,12 @@ export function VocabularyAddForm({ userId }: Props) {
             </FormItem>
           )}
         />
-        <Button className="w-full" type="submit" size="sm">
+        <Button
+          className="w-full"
+          type="submit"
+          size="sm"
+          disabled={form.formState.isSubmitting}
+        >
           Submit
         </Button>
       </form>

@@ -1,1 +1,1 @@
-export type TAddVocabularies = { userId: string; vocabularies: string[] };
+export type TAddVocabularies = { userId: string; vocabularies: string };

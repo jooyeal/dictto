@@ -18,5 +18,8 @@ export async function createVocabularies(data: TCreateVocabularies) {
     await prisma.vocabulary.createMany({
       data,
     });
-  } catch {}
+  } catch (e: any) {
+    console.error(e);
+    throw e;
+  }
 }
