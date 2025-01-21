@@ -59,7 +59,7 @@ const data = {
         },
         {
           title: "Settings",
-          url: "#",
+          url: "/main/vocabulary/settings",
         },
       ],
     },

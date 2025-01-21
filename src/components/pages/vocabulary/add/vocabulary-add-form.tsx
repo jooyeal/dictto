@@ -39,7 +39,8 @@ export function VocabularyAddForm({ userId }: Props) {
     if (!userId) return;
     return addVocabularies({ userId, vocabularies })
       .then(() => {
-        toast({ title: "Added vocabularies successfully" });
+        toast({ title: "Vocabulary added successfully" });
+        form.reset();
       })
       .catch(() => {
         toast({ title: "Failed to add", variant: "destructive" });
@@ -54,12 +55,17 @@ export function VocabularyAddForm({ userId }: Props) {
           name="vocabularies"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Add vocabularies</FormLabel>
+              <FormLabel>Add vocabulary</FormLabel>
               <FormControl>
-                <Textarea className="resize-none" rows={3} {...field} />
+                <Textarea
+                  className="resize-none"
+                  rows={3}
+                  disabled={form.formState.isSubmitting}
+                  {...field}
+                />
               </FormControl>
               <FormDescription>
-                If you want to add multiple vocabularies, separate them with a
+                If you want to add multiple vocabulary, separate them with a
                 comma (,). For example: apple, banana
               </FormDescription>
               <FormMessage />

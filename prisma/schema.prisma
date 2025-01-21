@@ -70,15 +70,24 @@ model VerificationToken {
 
 model Vocabulary {
   id         String  @id @default(cuid())
-  content    String  @unique
+  content    String  
   meaning    String
   isPassed   Boolean @default(false)
   examples   String[]
   userId     String
   user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+model VocabularySetting {
+  id        Int     @id @default(autoincrement())
+  name      VocabularySettingName  @unique
+  value     String
+}
 
 enum UserRole {
   USER
   ADMIN
+}
+
+enum VocabularySettingName {
+  TAKE_COUNT
 }
