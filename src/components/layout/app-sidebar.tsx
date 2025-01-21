@@ -51,7 +51,7 @@ const data = {
       items: [
         {
           title: "Start to study",
-          url: "#",
+          url: "/main/vocabulary/study",
         },
         {
           title: "Add vocabulary",

@@ -1,5 +1,5 @@
 import { VocabularySettings } from "@/components/pages/vocabulary";
 
-export default async function VocabularyAddPage() {
+export default async function VocabularySettingsPage() {
   return <VocabularySettings />;
 }

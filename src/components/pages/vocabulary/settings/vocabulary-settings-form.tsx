@@ -70,8 +70,8 @@ export function VocabularySettingsForm({ data }: Props) {
                 <Input type="number" min={1} max={20} {...field} />
               </FormControl>
               <FormDescription>
-                This number decides how many vocabulary words you'll learn at a
-                time.
+                This number decides how many vocabulary words you will learn at
+                a time.
               </FormDescription>
               <FormMessage />
             </FormItem>
