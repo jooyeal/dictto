@@ -12,6 +12,9 @@ export const authOptions = {
     }),
   ],
   callbacks: {
+    async redirect({ baseUrl }) {
+      return `${baseUrl}/main/dashboard`;
+    },
     async session({ session, user }) {
       const dbUser = await prisma.user.findUnique({
         where: {
@@ -27,5 +30,4 @@ export const authOptions = {
       return session;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
 } satisfies NextAuthOptions;
