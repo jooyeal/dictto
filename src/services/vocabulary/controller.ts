@@ -21,7 +21,9 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 export async function fetchRandomVocabularies() {
   try {
     const takeCount = await getVocabularySetting("TAKE_COUNT");
-    const vocabularies = await getRandomVocabularies();
+    const vocabularies = await getRandomVocabularies(
+      Number(takeCount?.value ?? 5)
+    );
     return vocabularies;
   } catch (e) {
     console.error(e);
@@ -29,7 +31,10 @@ export async function fetchRandomVocabularies() {
   }
 }
 
-export async function addVocabularies(data: TAddVocabularies) {
+export async function addVocabularies(
+  data: TAddVocabularies,
+  disableReValidation?: boolean
+) {
   try {
     // make dictionary with gpt
     const completion = await openai.chat.completions.create({
@@ -44,8 +49,8 @@ export async function addVocabularies(data: TAddVocabularies) {
           The each result must be like below's array, and don't provide any other information except array.
           If only one object is contained made it array with one element.
           {
-            content: {vocabulary that is user entered. if vocabulary is wrong, fix the spell}
-            meaning: {vocabulary's meaning}
+            content: {vocabulary that is user entered. if vocabulary is wrong, fix the spell.}
+            meaning: {vocabulary's meaning. explain it in details as much as you possible}
             examples: {vocabulary's example sentences. it's string array, you have to provide 3 sentences}
           }
           Finally, change the array to JSON, and it can be parsed using JSON.parse function.
@@ -86,7 +91,7 @@ export async function addVocabularies(data: TAddVocabularies) {
 
     // excute db manipulation
     await createVocabularies(vocabulariesDataWithUserId);
-    revalidatePath("/main/vocabulary/add");
+    !disableReValidation && revalidatePath("/main/vocabulary/add");
   } catch (e) {
     console.error(e);
     throw e;

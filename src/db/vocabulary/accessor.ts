@@ -4,7 +4,7 @@ import {
   TDeleteVocabulary,
   TUpdateVocabularySetting,
 } from "./schema";
-import { VocabularySettingName } from "@prisma/client";
+import { Vocabulary, VocabularySettingName } from "@prisma/client";
 
 export async function getVocabularies() {
   try {
@@ -16,14 +16,13 @@ export async function getVocabularies() {
   }
 }
 
-export async function getRandomVocabularies() {
+export async function getRandomVocabularies(take: number) {
   try {
-    const productsCount = await prisma.vocabulary.count();
-    const skip = Math.floor(Math.random() * productsCount);
-    const vocabularies = await prisma.vocabulary.findMany({
-      take: 5,
-      skip,
-    });
+    const vocabularies: Vocabulary[] = await prisma.$queryRaw`
+  SELECT * FROM "Vocabulary"
+  ORDER BY RANDOM()
+  LIMIT ${take};
+`;
     return vocabularies;
   } catch (e) {
     console.error(e);
