@@ -1,5 +1,9 @@
+"use client";
+
 import { GalleryVerticalEnd } from "lucide-react";
 import { LoginForm } from "./login-form";
+import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 
 export default function Signin() {
   return (
@@ -15,7 +19,13 @@ export default function Signin() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-xs">
-            <LoginForm />
+            <Button
+              onClick={async () => {
+                await signIn();
+              }}
+            >
+              login
+            </Button>
           </div>
         </div>
       </div>
