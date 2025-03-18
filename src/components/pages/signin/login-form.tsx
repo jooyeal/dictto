@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 import GoogleSigninButton from "../../ui/google-sign-in-button";
+import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 
 export function LoginForm({
   className,
@@ -14,6 +16,7 @@ export function LoginForm({
         </p>
       </div>
       <div className="grid gap-6">
+        <Button onClick={async () => await signIn()}>login</Button>
         {/* <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
           <Input id="email" type="email" placeholder="m@example.com" required />
@@ -38,7 +41,7 @@ export function LoginForm({
             Or continue with
           </span>
         </div> */}
-        <GoogleSigninButton />
+        {/* <GoogleSigninButton /> */}
       </div>
       {/* <div className="text-center text-sm">
         Don&apos;t have an account?{" "}
