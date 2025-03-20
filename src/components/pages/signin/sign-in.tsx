@@ -1,7 +1,6 @@
 "use client";
 
 import { GalleryVerticalEnd } from "lucide-react";
-import { LoginForm } from "./login-form";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 
@@ -18,15 +17,13 @@ export default function Signin() {
           </a>
         </div>
         <div className="flex flex-1 items-center justify-center">
-          <div className="w-full max-w-xs">
-            <Button
-              onClick={async () => {
-                await signIn();
-              }}
-            >
-              login
-            </Button>
-          </div>
+          <Button
+            onClick={async () => {
+              await signIn();
+            }}
+          >
+            Login with Google
+          </Button>
         </div>
       </div>
       <div className="relative hidden bg-muted lg:block">

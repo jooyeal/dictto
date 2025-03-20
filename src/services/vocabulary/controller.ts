@@ -11,7 +11,7 @@ import {
   TUpdateVocabularySetting,
   updateVocabularySetting,
 } from "@/db/vocabulary";
-import { TAddVocabularies } from "./type";
+import { TAddVocabularies, TCheckSentences } from "./type";
 import { ERROR_AI, ERROR_WRONG_TYPE } from "@/constants/messages";
 import OpenAI from "openai";
 import { revalidatePath } from "next/cache";
@@ -112,6 +112,66 @@ export async function modifyVocabularySetting(data: TUpdateVocabularySetting) {
   try {
     await updateVocabularySetting(data);
     revalidatePath("/main/vocabulary/settings");
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export async function checkSentences(data: TCheckSentences) {
+  try {
+    // make dictionary with gpt
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: `
+          You are an English assistant.
+          You need to check grammar and verify whether the given word is used appropriately in the sentence.
+          You should also provide feedback on whether there is a more suitable expression.
+
+          If the given sentence is appropriate, return "GOOD"; if it is not appropriate, return "BAD".
+
+          The user will ask you questions in the following JSON format:
+          
+          {
+            "vocabulary": "{given word}",
+            "sentence": "{sentence written by the user using the given word}"
+          }
+
+          Your response should be in the following JSON format:
+          {
+          "result": "{GOOD or BAD}",
+          "feedback": "{Check grammar, confirm whether the given word is used appropriately, and provide feedback on more suitable expressions if necessary.}"
+          }
+          `,
+        },
+        {
+          role: "user",
+          content: JSON.stringify(data),
+        },
+      ],
+    });
+
+    const result = completion.choices[0].message.content;
+
+    // check if gpt made dictionary successfully
+    if (!result) {
+      throw new Error(ERROR_AI);
+    }
+
+    if (result === "[]") {
+      throw new Error("Empty");
+    }
+
+    // change JSON to Array
+    const parsedResult = JSON.parse(result) as {
+      result: "GOOD" | "BAD";
+      feedback: string;
+    };
+
+    return parsedResult;
   } catch (e) {
     console.error(e);
     throw e;
