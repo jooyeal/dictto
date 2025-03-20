@@ -5,11 +5,10 @@ import {
   createVocabulariesSchema,
   deleteVocabularies,
   getRandomVocabularies,
-  getVocabularySetting,
   TCreateVocabularies,
   TDeleteVocabulary,
-  TUpdateVocabularySetting,
-  updateVocabularySetting,
+  TUpdateStatusStudied,
+  updateStatusStudied,
 } from "@/db/vocabulary";
 import { TAddVocabularies, TCheckSentences } from "./type";
 import { ERROR_AI, ERROR_WRONG_TYPE } from "@/constants/messages";
@@ -20,10 +19,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 export async function fetchRandomVocabularies() {
   try {
-    const takeCount = await getVocabularySetting("TAKE_COUNT");
-    const vocabularies = await getRandomVocabularies(
-      Number(takeCount?.value ?? 5)
-    );
+    const vocabularies = await getRandomVocabularies();
     return vocabularies;
   } catch (e) {
     console.error(e);
@@ -108,16 +104,6 @@ export async function removeVocabularies(data: TDeleteVocabulary) {
   }
 }
 
-export async function modifyVocabularySetting(data: TUpdateVocabularySetting) {
-  try {
-    await updateVocabularySetting(data);
-    revalidatePath("/main/vocabulary/settings");
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-}
-
 export async function checkSentences(data: TCheckSentences) {
   try {
     // make dictionary with gpt
@@ -172,6 +158,15 @@ export async function checkSentences(data: TCheckSentences) {
     };
 
     return parsedResult;
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
+export async function modifyStatusStudied(data: TUpdateStatusStudied) {
+  try {
+    await updateStatusStudied(data);
   } catch (e) {
     console.error(e);
     throw e;

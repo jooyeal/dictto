@@ -3,13 +3,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { checkSentences } from "@/services/vocabulary";
+import { checkSentences, modifyStatusStudied } from "@/services/vocabulary";
 import { CheckCircleIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { SENTENCE_CHECK_COUNT } from "@/constants/numbers";
+import { Vocabulary } from "@prisma/client";
 
 type Props = {
-  vocabulary: string;
+  vocabulary: Vocabulary;
   onPracticeOver: () => void;
 };
 
@@ -39,7 +41,11 @@ export default function VocabularyStudyPractice({
   });
 
   React.useEffect(() => {
-    if (watch("successCount") >= 5) onPracticeOver();
+    // when practice is over
+    if (watch("successCount") >= SENTENCE_CHECK_COUNT) {
+      onPracticeOver();
+      setValue("successCount", 0);
+    }
   }, [watch("successCount")]);
 
   const onSubmit = handleSubmit(async (data) => {
@@ -48,7 +54,7 @@ export default function VocabularyStudyPractice({
 
       // check sentence acuracy
       const aiResult = await checkSentences({
-        vocabulary,
+        vocabulary: vocabulary.content,
         sentence: content,
       });
 
@@ -65,7 +71,10 @@ export default function VocabularyStudyPractice({
         setValue("success", true);
         setValue("error", false);
         setValue("feedback", "");
+        await modifyStatusStudied({ id: vocabulary.id, isPassed: true });
       }
+
+      return;
     } catch {
       toast({ title: "System Error", variant: "destructive" });
     }
@@ -83,7 +92,7 @@ export default function VocabularyStudyPractice({
       </div>
       <Label>
         Make a sentence by using vocabulary{" "}
-        <span className="font-bold text-lg">{vocabulary}</span>
+        <span className="font-bold text-lg">{vocabulary.content}</span>
       </Label>
       <div className="flex items-center gap-2">
         <Input required {...register("content")} autoComplete="off" />
@@ -92,7 +101,7 @@ export default function VocabularyStudyPractice({
         {watch("feedback")}
       </p>
 
-      <Button disabled={formState.isLoading}>Submit</Button>
+      <Button disabled={formState.isSubmitting}>Submit</Button>
     </form>
   );
 }

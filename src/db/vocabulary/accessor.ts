@@ -2,9 +2,9 @@ import { prisma } from "@/lib/prisma";
 import {
   TCreateVocabularies,
   TDeleteVocabulary,
-  TUpdateVocabularySetting,
+  TUpdateStatusStudied,
 } from "./schema";
-import { Vocabulary, VocabularySettingName } from "@prisma/client";
+import { Vocabulary } from "@prisma/client";
 
 export async function getVocabularies() {
   try {
@@ -16,12 +16,12 @@ export async function getVocabularies() {
   }
 }
 
-export async function getRandomVocabularies(take: number) {
+export async function getRandomVocabularies() {
   try {
     const vocabularies: Vocabulary[] = await prisma.$queryRaw`
   SELECT * FROM "Vocabulary"
+  WHERE "isPassed" = false
   ORDER BY RANDOM()
-  LIMIT ${take};
 `;
     return vocabularies;
   } catch (e) {
@@ -50,39 +50,17 @@ export async function deleteVocabularies(data: TDeleteVocabulary) {
   }
 }
 
-export async function getVocabularySettings() {
+export async function updateStatusStudied(data: TUpdateStatusStudied) {
+  const { id, isPassed } = data;
   try {
-    const settings = await prisma.vocabularySetting.findMany();
-    return settings;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-}
-
-export async function getVocabularySetting(name: VocabularySettingName) {
-  try {
-    const setting = await prisma.vocabularySetting.findUnique({
+    await prisma.vocabulary.update({
+      data: { isPassed, studiedCount: { increment: 1 } },
       where: {
-        name,
-      },
-    });
-    return setting;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
-}
-
-export async function updateVocabularySetting(data: TUpdateVocabularySetting) {
-  try {
-    await prisma.vocabularySetting.update({
-      data: { value: data.value },
-      where: {
-        id: data.id,
+        id,
       },
     });
   } catch (e) {
+    console.log("errorororor");
     console.error(e);
     throw e;
   }

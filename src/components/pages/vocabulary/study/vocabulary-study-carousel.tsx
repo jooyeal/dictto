@@ -147,7 +147,7 @@ export function VocabularyStudyCarousel({ data }: Props) {
                   } absolute bg-white`}
                 >
                   <VocabularyStudyPractice
-                    vocabulary={vocabulary.content}
+                    vocabulary={vocabulary}
                     onPracticeOver={handlePracticeOver}
                   />
                 </div>

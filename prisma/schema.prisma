@@ -69,18 +69,14 @@ model VerificationToken {
 }
 
 model Vocabulary {
-  id         String  @id @default(cuid())
-  content    String  
-  meaning    String
-  isPassed   Boolean @default(false)
-  examples   String[]
-  userId     String
-  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-model VocabularySetting {
-  id        Int     @id @default(autoincrement())
-  name      VocabularySettingName  @unique
-  value     String
+  id          String  @id @default(cuid())
+  content     String  
+  meaning     String
+  isPassed    Boolean @default(false)
+  examples    String[]
+  userId      String
+  studiedCount Int    @default(0)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum UserRole {
