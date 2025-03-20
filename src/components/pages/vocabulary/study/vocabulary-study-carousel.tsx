@@ -160,7 +160,7 @@ export function VocabularyStudyCarousel({ data }: Props) {
           onClick={() => handleClickMove("next")}
         />
       </div>
-      <div className="py-2 text-center text-sm text-muted-foreground">
+      <div className="py-2 text-center text-sm text-muted-foreground select-none">
         {current + 1} of {data.length}
       </div>
     </SessionProvider>

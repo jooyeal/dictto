@@ -44,6 +44,7 @@ export async function addVocabularies(
           You have to explain meaning of each vocabulary, and when you display the user the explanation you have to follow the rules below
           The each result must be like below's array, and don't provide any other information except array.
           If only one object is contained made it array with one element.
+          The user may provide a vocabulary in a non-base form (e.g., writing 'likes' instead of 'like'), but you should interpret it as its base form
           {
             content: {vocabulary that is user entered. if vocabulary is wrong, fix the spell.}
             meaning: {vocabulary's meaning. explain it in details as much as you possible}
